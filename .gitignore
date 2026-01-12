@@ -1,0 +1,101 @@
+# OS / Editors
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.orig
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+*.so
+.venv/
+venv/
+env/
+.env
+.env.*
+.venv.*
+*.egg-info/
+.eggs/
+build/
+dist/
+pip-wheel-metadata/
+.pytest_cache/
+.mypy_cache/
+.pyre/
+.pytype/
+.cache/
+.ipynb_checkpoints/
+
+# JavaScript / TypeScript
+node_modules/
+.npm/
+.pnpm-store/
+.pnpm-debug.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+dist/
+build/
+coverage/
+.next/
+.nuxt/
+.svelte-kit/
+.vite/
+.parcel-cache/
+.storybook-out/
+
+# Package managers
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Logs
+*.log
+logs/
+
+# Environment & secrets
+*.env
+.env.local
+.env.production
+.env.development
+.env.test
+*.pem
+*.key
+
+# Infrastructure / IaC / Serverless artifacts
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.backup
+*.tfvars
+*.tfvars.json
+cdk.out/
+.aws-sam/
+.serverless/
+.sls-next*
+.chalice/
+.sst/
+.overmind.sock
+
+# Containers
+*.tar
+*.gz
+*.zip
+*.tmp
+.dockerignore
+
+# Coverage / test output
+htmlcov/
+coverage.xml
+.junit/
+.nyc_output/
+
+# Misc
+.idea/
+.vscode/
+.vscode-test/

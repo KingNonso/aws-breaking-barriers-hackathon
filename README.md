@@ -65,7 +65,7 @@ Recommended conventions:
 
 ## License
 
-TBD. If you plan to reuse or extend the work, please add a LICENSE file or contact the maintainers.
+TBD. If you plan to reuse or extend the work, please contact the maintainers.
 
 ## Acknowledgements
 
