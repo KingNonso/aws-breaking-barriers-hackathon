@@ -1,0 +1,10 @@
+{
+  "Entries": [
+    {
+      "Source": "trafficking.indicators",
+      "DetailType": "Phone Number",
+      "Detail": "{\"indicator_type\": \"phone\", \"value\": \"+15559876543\", \"source\": \"financial_monitoring\", \"metadata\": {\"transaction_amount\": 50000, \"suspicious_pattern\": true, \"network_id\": \"NET-001\", \"urgency\": \"high\"}}",
+      "EventBusName": "default"
+    }
+  ]
+}

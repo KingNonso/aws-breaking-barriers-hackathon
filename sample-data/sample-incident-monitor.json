@@ -1,0 +1,10 @@
+{
+  "Entries": [
+    {
+      "Source": "trafficking.indicators",
+      "DetailType": "Suspect Name",
+      "Detail": "{\"indicator_type\": \"name\", \"value\": \"John Doe\", \"source\": \"social_media\", \"metadata\": {\"platform\": \"twitter\", \"post_id\": \"12345\", \"urgency\": \"low\"}}",
+      "EventBusName": "default"
+    }
+  ]
+}

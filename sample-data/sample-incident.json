@@ -1,0 +1,8 @@
+[
+  {
+    "Source": "trafficking.indicators",
+    "DetailType": "Phone Number",
+    "Detail": "{\"indicator_type\": \"phone\", \"value\": \"+15551234567\", \"source\": \"tip_line\", \"metadata\": {\"tip_id\": \"TIP-001\", \"reporter\": \"anonymous\", \"urgency\": \"medium\"}}",
+    "EventBusName": "default"
+  }
+]
