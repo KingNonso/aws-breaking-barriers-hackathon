@@ -27,7 +27,7 @@ Use this checklist to ensure a smooth deployment.
 - [ ] **Bedrock access enabled** for Claude 4 Sonnet
 
   - Go to AWS Console → Bedrock → Model access
-  - Enable: anthropic.claude-sonnet-4-20250514-v1:0
+  - Enable: anthropic.claude-sonnet-4-20260514-v1:0
 
 - [ ] **SES sender email verified**
 

@@ -1046,6 +1046,83 @@ const CONFIG = {
 };
 ```
 
+### 6. Development Server
+
+**Purpose**: Serve UI files locally for development and testing
+
+**Implementation**:
+
+```javascript
+// server.js
+const express = require("express");
+const path = require("path");
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Serve static files from the ui directory
+app.use(express.static(path.join(__dirname)));
+
+// Serve HTML files from the code directory
+app.use("/screens", express.static(path.join(__dirname, "../code")));
+
+// Route handlers for each screen
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "../code/screen1/code.html"));
+});
+
+app.get("/screen1", (req, res) => {
+  res.sendFile(path.join(__dirname, "../code/screen1/code.html"));
+});
+
+app.get("/screen2", (req, res) => {
+  res.sendFile(path.join(__dirname, "../code/screen2/code.html"));
+});
+
+app.get("/screen3", (req, res) => {
+  res.sendFile(path.join(__dirname, "../code/screen3/code.html"));
+});
+
+app.get("/screen4", (req, res) => {
+  res.sendFile(path.join(__dirname, "../code/screen4/code.html"));
+});
+
+app.get("/screen5", (req, res) => {
+  res.sendFile(path.join(__dirname, "../code/screen5/code.html"));
+});
+
+// Start server
+app.listen(PORT, () => {
+  console.log(`🚀 UI Server running at http://localhost:${PORT}`);
+  console.log(`📱 Access the application at http://localhost:${PORT}`);
+});
+```
+
+**Package.json Configuration**:
+
+```json
+{
+  "name": "trafficking-alert-ui",
+  "version": "1.0.0",
+  "description": "Real-Time Trafficking Alert System UI",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "fast-check": "^3.15.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
+  }
+}
+```
+
 ## Data Models
 
 ```typescript
@@ -1248,19 +1325,18 @@ _For any_ lost WebSocket connection, the client should attempt to reconnect auto
 _For any_ active WebSocket connection, the backend should send heartbeat messages every 30 seconds
 **Validates: Requirements 7.5**
 
-### Performance and Configuration Properties
+### Property 28: Application load time\*\*
 
-**Property 28: Application load time**
 _For any_ user accessing the application, the initial page load should complete within 2 seconds
-**Validates: Requirements 8.3**
+**Validates: Requirements 8.5**
 
 **Property 29: Environment-specific configuration**
 _For any_ environment (dev, staging, prod), the application should use the correct API endpoint URL for that environment
-**Validates: Requirements 8.4**
+**Validates: Requirements 8.6**
 
 **Property 30: Client-side routing**
 _For any_ direct URL navigation to a screen, the application should load that screen without requiring navigation from Screen 1
-**Validates: Requirements 8.5**
+**Validates: Requirements 8.7**
 
 ### Session Management Properties
 
@@ -1432,7 +1508,7 @@ from aws_cdk import (
     RemovalPolicy
 )
 
-class UIIntegrationStack(Stack):
+class TraffickingAlertUIStack(Stack):
     def __init__(self, scope, id, **kwargs):
         super().__init__(scope, id, **kwargs)
 
@@ -1578,6 +1654,27 @@ class UIIntegrationStack(Stack):
 
 ### Deployment Steps
 
+**Local Development**:
+
+1. **Install dependencies**:
+
+   ```bash
+   cd ui
+   npm install
+   ```
+
+2. **Start development server**:
+
+   ```bash
+   npm start
+   ```
+
+3. **Access the application**:
+   - Open browser to http://localhost:3000
+   - The UI will be served with all 5 screens accessible
+
+**Production Deployment**:
+
 1. **Build and package UI**:
 
    ```bash
@@ -1590,7 +1687,7 @@ class UIIntegrationStack(Stack):
 
    ```bash
    cd cdk
-   cdk deploy UIIntegrationStack
+   cdk deploy TraffickingAlertUIStack
    ```
 
 3. **Upload UI to S3**:
@@ -1600,10 +1697,23 @@ class UIIntegrationStack(Stack):
    ```
 
 4. **Invalidate CloudFront cache**:
+
    ```bash
    aws cloudfront create-invalidation \
      --distribution-id DISTRIBUTION_ID \
      --paths "/*"
+   ```
+
+5. **Access the deployed application**:
+
+   - The CloudFront URL will be output by the CDK deployment
+   - Access the application at: https://{CloudFrontDistributionDomain}
+   - Example: https://d1234567890abc.cloudfront.net
+     --distribution-id DISTRIBUTION_ID \
+     --paths "/\*"
+
+   ```
+
    ```
 
 ### Cost Estimation

@@ -38,7 +38,7 @@ aws configure
 1. Go to AWS Console → Amazon Bedrock
 2. Navigate to "Model access" in the left sidebar
 3. Click "Manage model access"
-4. Enable access to **Claude 4 Sonnet** (anthropic.claude-sonnet-4-20250514-v1:0)
+4. Enable access to **Claude 4 Sonnet** (anthropic.claude-sonnet-4-20260514-v1:0)
 5. Wait for access to be granted (usually instant)
 
 Verify access:

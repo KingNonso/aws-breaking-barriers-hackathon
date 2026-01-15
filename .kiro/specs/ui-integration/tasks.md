@@ -6,15 +6,26 @@ This implementation plan breaks down the UI integration into discrete coding tas
 
 ## Tasks
 
-- [-] 1. Set up project structure and configuration
+- [-] 1. Set up project structure and development server
 
   - Create directory structure for client-side JavaScript modules
   - Create directory structure for backend Lambda functions
   - Set up configuration management for environment-specific API endpoints
-  - Install dependencies (fast-check for testing, boto3 for AWS SDK)
-  - _Requirements: 8.4_
+  - Install dependencies (express for dev server, fast-check for testing, boto3 for AWS SDK)
+  - Create Express development server to serve UI at localhost:3000
+  - Add npm scripts for starting development server
+  - _Requirements: 8.1, 8.2, 8.6_
 
 - [ ] 2. Implement client-side JavaScript modules
+
+  - [ ] 2.0 Create development server
+
+    - Write Express server.js to serve UI files
+    - Add route handlers for all 5 screens
+    - Configure static file serving for JS and CSS
+    - Add npm start script to package.json
+    - Test server starts and serves files at localhost:3000
+    - _Requirements: 8.1, 8.2_
 
   - [ ] 2.1 Create API Client module
 
@@ -164,22 +175,23 @@ This implementation plan breaks down the UI integration into discrete coding tas
 
   - [ ] 7.1 Create S3 bucket and CloudFront distribution
 
-    - Define S3 bucket for static website hosting
+    - Add S3 bucket for static website hosting to TraffickingAlertUIStack
     - Configure public read access
     - Create CloudFront distribution with S3 origin
     - Set website_index_document to screen1.html
-    - _Requirements: 8.1, 8.2_
+    - Output CloudFront URL for production access
+    - _Requirements: 8.3, 8.4_
 
   - [ ] 7.2 Create DynamoDB connections table
 
-    - Define connections table with connection_id partition key
+    - Add connections table with connection_id partition key to TraffickingAlertUIStack
     - Add Global Secondary Index for incident_id lookups
     - Configure pay-per-request billing mode
     - _Requirements: 7.2_
 
   - [ ] 7.3 Create REST API Gateway
 
-    - Define RestApi with CORS enabled
+    - Add RestApi with CORS enabled to TraffickingAlertUIStack
     - Add /incidents POST route with Submit Lambda integration
     - Add /incidents/{incident_id} GET route with Status Lambda integration
     - Add /incidents/{incident_id}/brief GET route with PDF Lambda integration
@@ -187,7 +199,7 @@ This implementation plan breaks down the UI integration into discrete coding tas
 
   - [ ] 7.4 Create WebSocket API Gateway
 
-    - Define WebSocketApi with connect and disconnect routes
+    - Add WebSocketApi with connect and disconnect routes to TraffickingAlertUIStack
     - Create WebSocket stage with auto-deploy
     - Configure Lambda integrations for connect and disconnect handlers
     - _Requirements: 7.1, 7.2_
@@ -229,23 +241,32 @@ This implementation plan breaks down the UI integration into discrete coding tas
     - Ensure metric cards and download button have correct selectors
     - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
 
-- [ ] 9. Deploy and test end-to-end
+- [ ] 9. Test locally and deploy
 
-  - [ ] 9.1 Deploy CDK stack
+  - [ ] 9.1 Test development server locally
 
-    - Run `cdk deploy UIIntegrationStack`
+    - Start development server with `npm start`
+    - Verify UI is accessible at http://localhost:3000
+    - Test navigation between all screens
+    - Verify static assets load correctly
+    - _Requirements: 8.1, 8.2_
+
+  - [ ] 9.2 Deploy CDK stack
+
+    - Run `cdk deploy TraffickingAlertUIStack`
     - Verify all resources created successfully
     - Note API Gateway URL and WebSocket URL
-    - _Requirements: 6.1, 6.2, 6.3, 7.1_
+    - Note CloudFront distribution URL
+    - _Requirements: 6.1, 6.2, 6.3, 7.1, 8.3, 8.4_
 
-  - [ ] 9.2 Upload UI files to S3
+  - [ ] 9.3 Upload UI files to S3
 
     - Copy HTML files and JavaScript modules to dist/ directory
     - Sync dist/ to S3 bucket
     - Invalidate CloudFront cache
-    - _Requirements: 8.1, 8.2_
+    - _Requirements: 8.3, 8.4_
 
-  - [ ] 9.3 Test complete flow
+  - [ ] 9.4 Test complete flow locally
 
     - Submit test incident from Screen 1
     - Verify WebSocket updates on Screen 2
@@ -254,7 +275,15 @@ This implementation plan breaks down the UI integration into discrete coding tas
     - Verify summary and PDF download on Screen 5
     - _Requirements: 1.1, 2.1, 3.1, 4.1, 5.1_
 
-  - [ ] 9.4 Test error scenarios
+  - [ ] 9.5 Test complete flow on production URL
+
+    - Access CloudFront URL in browser
+    - Submit test incident from Screen 1
+    - Verify complete flow works end-to-end
+    - Test on multiple browsers (Chrome, Firefox, Safari)
+    - _Requirements: 8.3, 8.4, 8.5_
+
+  - [ ] 9.6 Test error scenarios
     - Test with invalid input
     - Test with network failures
     - Test with expired sessions

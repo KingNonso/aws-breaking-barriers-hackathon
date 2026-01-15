@@ -3,5 +3,5 @@ import aws_cdk as cdk
 from stack import TraffickingAlertStack
 
 app = cdk.App()
-TraffickingAlertStack(app, "TraffickingAlertStack")
+TraffickingAlertStack(app, "TraffickingAlertUIStack")
 app.synth()

@@ -349,7 +349,7 @@ def log_agent_decision(incident_id: str, decision_log: dict) -> dict:
 
 # Initialize Strands Agent
 model = BedrockModel(
-    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
+    model_id="anthropic.claude-sonnet-4-20260514-v1:0",
     region_name="us-west-2",
     temperature=0.2,  # Lower for consistent risk assessment
     max_tokens=4096

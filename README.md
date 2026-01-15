@@ -19,8 +19,6 @@ The initial solution focus is Stop the Traffik: Survivor‑Powered Supply Chain 
 - High‑level architecture, data flow, and MVP scope are detailed in the Hackathon Solution document (see the section “High‑Level Architecture Diagram”).
 - Direct link to the diagram section: [Stop_the_Traffik_AWS_Hackathon_Solution.md#high-level-architecture-diagram](generated-docs/Stop_the_Traffik_AWS_Hackathon_Solution.md#high-level-architecture-diagram)
 
-![AWS Hackathon Image](image-assets/aws-hackathon-image.png)
-
 ## Getting Started
 
 This repository currently contains generated documentation and image assets that frame the solution. Implementation code and runnable demos will be added during and after the hackathon.

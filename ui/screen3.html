@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Critical Risk Detection - Intelligence Agent</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<style>
+        .pulse-ring {
+            animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        .slide-in-right {
+            animation: slideInRight 0.5s ease-out forwards;
+        }
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .blink {
+            animation: blinker 1.5s linear infinite;
+        }
+        @keyframes blinker {
+            50% { opacity: 0.3; }
+        }::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #475569;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+    </style>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#EF4444",secondary: "#3B82F6","background-light": "#F8FAFC",
+                        "background-dark": "#0F172A",
+                        "surface-light": "#FFFFFF",
+                        "surface-dark": "#1E293B",
+                        "border-light": "#E2E8F0",
+                        "border-dark": "#334155",
+                    },
+                    fontFamily: {
+                        sans: ["Inter", "sans-serif"],
+                        mono: ["JetBrains Mono", "monospace"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.5rem",
+                    },
+                },
+            },
+        };
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-200 min-h-screen flex flex-col font-sans transition-colors duration-200">
+<header class="h-16 border-b border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark flex items-center justify-between px-6 sticky top-0 z-50 shadow-sm">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<span class="material-icons-round text-primary text-3xl">policy</span>
+<span class="font-bold text-lg tracking-tight">TRAFFIC<span class="text-primary">GUARD</span> AI</span>
+</div>
+<div class="h-6 w-px bg-slate-300 dark:bg-slate-700 mx-2"></div>
+<nav class="hidden md:flex gap-6 text-sm font-medium text-slate-500 dark:text-slate-400">
+<a class="hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="text-primary" href="#">Active Operations</a>
+<a class="hover:text-primary transition-colors" href="#">History</a>
+<a class="hover:text-primary transition-colors" href="#">Settings</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 px-3 py-1.5 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 rounded-full border border-red-200 dark:border-red-900/50 text-xs font-mono animate-pulse">
+<span class="w-2 h-2 rounded-full bg-red-500"></span>
+                LIVE MONITORING
+            </div>
+<div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 cursor-pointer">
+<span class="material-icons-round text-sm">person</span>
+</div>
+<button class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500" onclick="document.documentElement.classList.toggle('dark')">
+<span class="material-icons-round">dark_mode</span>
+</button>
+</div>
+</header>
+<main class="flex-1 p-6 grid grid-cols-12 gap-6 overflow-hidden h-[calc(100vh-4rem)]">
+<aside class="col-span-12 lg:col-span-3 flex flex-col gap-6">
+<div class="bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-xl p-5 shadow-sm">
+<h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Agent Status</h3>
+<div class="flex flex-col items-center justify-center py-6 relative">
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-32 h-32 border-4 border-primary/20 rounded-full animate-[spin_3s_linear_infinite]"></div>
+<div class="w-24 h-24 border-4 border-t-primary border-r-transparent border-b-transparent border-l-transparent rounded-full absolute animate-[spin_1s_linear_infinite]"></div>
+</div>
+<span class="material-icons-round text-4xl text-primary z-10">smart_toy</span>
+<div class="mt-4 text-center z-10 bg-surface-light dark:bg-surface-dark px-2">
+<div class="text-primary font-bold tracking-widest text-lg blink">ANALYZING...</div>
+<div class="text-xs text-slate-500 mt-1 font-mono">Process ID: #XJ-9204</div>
+</div>
+</div>
+<div class="mt-6 space-y-3">
+<div class="flex justify-between text-sm">
+<span class="text-slate-500">Latency</span>
+<span class="font-mono text-green-500">12ms</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-slate-500">Historical Scan</span>
+<span class="font-mono text-slate-700 dark:text-slate-300">340 Cases</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-slate-500">Confidence</span>
+<span class="font-mono text-primary font-bold">98.2%</span>
+</div>
+</div>
+</div>
+<div class="flex-1 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-xl p-5 shadow-sm overflow-hidden flex flex-col">
+<h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Live Feed Stream</h3>
+<div class="flex-1 overflow-y-auto font-mono text-xs space-y-2 pr-2">
+<div class="flex gap-2 text-slate-400 border-l-2 border-slate-300 dark:border-slate-700 pl-2">
+<span class="opacity-50">14:22:01</span>
+<span>Heartbeat check OK</span>
+</div>
+<div class="flex gap-2 text-slate-400 border-l-2 border-slate-300 dark:border-slate-700 pl-2">
+<span class="opacity-50">14:22:05</span>
+<span>Syncing databases...</span>
+</div>
+<div class="flex gap-2 text-white bg-slate-900 p-2 rounded border-l-4 border-yellow-500">
+<span class="opacity-50 text-yellow-500">14:23:10</span>
+<span class="text-yellow-100">INJECT: +1 (555) 019-2834</span>
+</div>
+<div class="flex gap-2 text-slate-500 dark:text-slate-400 border-l-2 border-primary pl-2 bg-red-50 dark:bg-red-900/10 p-1 rounded-r">
+<span class="opacity-50 text-red-400">14:23:11</span>
+<span class="text-red-600 dark:text-red-400 font-bold">MATCH FOUND: DB_TRAFF_04</span>
+</div>
+<div class="flex gap-2 text-slate-500 dark:text-slate-400 border-l-2 border-primary pl-2">
+<span class="opacity-50">14:23:12</span>
+<span>Cross-referencing victims...</span>
+</div>
+</div>
+</div>
+</aside>
+<section class="col-span-12 lg:col-span-6 bg-slate-900 rounded-xl relative overflow-hidden border border-slate-700 shadow-2xl flex flex-col">
+<div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-slate-800 to-slate-950 z-0"></div>
+<div class="relative z-10 flex justify-between items-center p-4 border-b border-slate-800 bg-slate-900/80 backdrop-blur-sm">
+<div class="flex items-center gap-2">
+<span class="material-icons-round text-slate-400 text-sm">hub</span>
+<span class="text-slate-200 font-medium text-sm">Link Analysis Visualization</span>
+</div>
+<div class="flex gap-2">
+<span class="px-2 py-1 bg-slate-800 rounded text-xs text-slate-400 font-mono">Nodes: 14</span>
+<span class="px-2 py-1 bg-slate-800 rounded text-xs text-slate-400 font-mono">Edges: 42</span>
+</div>
+</div>
+<div class="relative flex-1 w-full h-full z-0 p-8 overflow-hidden">
+<div class="absolute inset-0" style="background-image: radial-gradient(#334155 1px, transparent 1px); background-size: 20px 20px; opacity: 0.2;"></div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 pulse-ring rounded-full">
+<div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center border-4 border-red-900 shadow-[0_0_30px_rgba(239,68,68,0.6)] relative">
+<span class="material-icons-round text-white text-2xl">warning</span>
+<div class="absolute -top-10 bg-slate-800 text-white text-xs px-2 py-1 rounded border border-slate-600 whitespace-nowrap">
+                            Suspect: +1 (555) 019-2834
+                        </div>
+</div>
+</div>
+<div class="absolute top-[25%] left-[25%]">
+<div class="w-10 h-10 bg-slate-700 rounded-full flex items-center justify-center border-2 border-slate-500 shadow-lg relative">
+<span class="material-icons-round text-slate-300 text-sm">person</span>
+</div>
+<svg class="absolute top-5 left-5 w-[200px] h-[200px] pointer-events-none" style="transform: rotate(45deg); transform-origin: top left; z-index: -1;">
+<line stroke="#475569" stroke-width="2" x1="0" x2="150" y1="0" y2="150"></line>
+</svg>
+</div>
+<div class="absolute top-[30%] right-[30%]">
+<div class="w-10 h-10 bg-slate-700 rounded-full flex items-center justify-center border-2 border-slate-500 shadow-lg">
+<span class="material-icons-round text-slate-300 text-sm">place</span>
+</div>
+<svg class="absolute top-5 right-5 w-[300px] h-[300px] pointer-events-none" style="transform: rotate(-135deg); transform-origin: top right; z-index: -1;">
+<line class="animate-pulse" stroke="#ef4444" stroke-dasharray="5,5" stroke-width="2" x1="0" x2="120" y1="0" y2="120"></line>
+</svg>
+</div>
+<div class="absolute bottom-[20%] left-[45%] flex gap-8">
+<div class="w-8 h-8 bg-slate-800 rounded-full border border-slate-600"></div>
+<div class="w-8 h-8 bg-slate-800 rounded-full border border-slate-600"></div>
+</div>
+<svg class="absolute inset-0 w-full h-full pointer-events-none z-10">
+<line stroke="#ef4444" stroke-opacity="0.6" stroke-width="2" x1="50%" x2="27%" y1="50%" y2="28%"></line>
+<line stroke="#ef4444" stroke-opacity="0.8" stroke-width="2" x1="50%" x2="72%" y1="50%" y2="33%"></line>
+<line stroke="#ef4444" stroke-opacity="0.4" stroke-width="1" x1="50%" x2="47%" y1="50%" y2="78%"></line>
+<line stroke="#ef4444" stroke-opacity="0.4" stroke-width="1" x1="50%" x2="55%" y1="50%" y2="78%"></line>
+<circle cx="50%" cy="50%" fill="none" r="150" stroke="#ef4444" stroke-dasharray="4 4" stroke-opacity="0.1" stroke-width="1"></circle>
+<circle cx="50%" cy="50%" fill="none" r="250" stroke="#ef4444" stroke-opacity="0.05" stroke-width="1"></circle>
+</svg>
+<div class="absolute top-10 right-10 bg-black/60 backdrop-blur px-3 py-2 rounded border border-red-500/30 text-xs text-red-300 font-mono animate-bounce">
+                    ⚠ KNOWN NETWORK MATCH
+                </div>
+</div>
+<div class="relative z-10 p-3 bg-slate-900/90 border-t border-slate-800 flex justify-between items-center">
+<div class="text-xs text-slate-500">Scale: 1:500 • Last update: 0.1s ago</div>
+<div class="flex gap-2">
+<button class="p-1 hover:bg-slate-700 rounded text-slate-400"><span class="material-icons-round text-sm">zoom_in</span></button>
+<button class="p-1 hover:bg-slate-700 rounded text-slate-400"><span class="material-icons-round text-sm">zoom_out</span></button>
+<button class="p-1 hover:bg-slate-700 rounded text-slate-400"><span class="material-icons-round text-sm">center_focus_strong</span></button>
+</div>
+</div>
+</section>
+<aside class="col-span-12 lg:col-span-3 flex flex-col gap-6 relative">
+<div class="slide-in-right bg-primary text-white rounded-xl shadow-2xl shadow-red-500/40 border border-red-400 overflow-hidden relative group cursor-pointer transition-transform hover:scale-[1.02]">
+<div class="absolute -right-10 -top-10 w-40 h-40 bg-white opacity-10 rounded-full blur-2xl group-hover:opacity-20 transition-opacity"></div>
+<div class="p-1 bg-red-800 flex items-center justify-between px-4">
+<span class="text-[10px] font-bold tracking-widest uppercase">High Priority Alert</span>
+<span class="material-icons-round text-sm animate-pulse">campaign</span>
+</div>
+<div class="p-5">
+<div class="flex items-start justify-between mb-4">
+<div>
+<h2 class="text-2xl font-black font-sans leading-none">CRITICAL</h2>
+<p class="text-red-100 text-xs mt-1 opacity-90">Immediate Action Required</p>
+</div>
+<div class="flex flex-col items-center">
+<div class="text-4xl font-black font-mono tracking-tighter">94</div>
+<div class="text-[9px] uppercase tracking-wider font-bold opacity-80">Risk Score</div>
+</div>
+</div>
+<hr class="border-red-400/50 mb-4"/>
+<div class="space-y-3">
+<div>
+<div class="text-[10px] uppercase font-bold text-red-200 mb-1">AI Reasoning</div>
+<div class="bg-red-800/40 p-2 rounded text-sm font-medium leading-snug border border-red-400/30 backdrop-blur-sm">
+                                "Linked to known trafficking network via shared device fingerprint and geolocation pattern."
+                            </div>
+</div>
+<div class="grid grid-cols-2 gap-2 mt-2">
+<div class="bg-red-800/30 p-2 rounded border border-red-400/20">
+<div class="text-[9px] uppercase opacity-70">Matches</div>
+<div class="text-lg font-bold">3</div>
+</div>
+<div class="bg-red-800/30 p-2 rounded border border-red-400/20">
+<div class="text-[9px] uppercase opacity-70">Agencies</div>
+<div class="text-lg font-bold">Alerted</div>
+</div>
+</div>
+</div>
+<div class="mt-5 flex gap-2">
+<button class="flex-1 bg-white text-primary font-bold py-2 rounded shadow-lg text-xs uppercase tracking-wide hover:bg-gray-100 transition-colors flex items-center justify-center gap-1">
+<span class="material-icons-round text-sm">assignment</span> View Brief
+                        </button>
+<button class="w-10 bg-red-800 hover:bg-red-700 rounded text-white flex items-center justify-center border border-red-600">
+<span class="material-icons-round text-sm">share</span>
+</button>
+</div>
+</div>
+</div>
+<div class="flex-1 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-xl p-5 shadow-sm flex flex-col justify-between">
+<div>
+<h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Automated Response Log</h3>
+<ul class="space-y-4">
+<li class="flex items-start gap-3 text-sm">
+<div class="mt-1 w-5 h-5 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400 flex-shrink-0">
+<span class="material-icons-round text-xs">check</span>
+</div>
+<div>
+<p class="font-medium text-slate-700 dark:text-slate-200">Alert Dispatched</p>
+<p class="text-xs text-slate-500">Sent to 3 agencies (FBI, DHS, Local PD)</p>
+</div>
+</li>
+<li class="flex items-start gap-3 text-sm">
+<div class="mt-1 w-5 h-5 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400 flex-shrink-0">
+<span class="material-icons-round text-xs">check</span>
+</div>
+<div>
+<p class="font-medium text-slate-700 dark:text-slate-200">SMS Notification</p>
+<p class="text-xs text-slate-500">Sent to demo phone</p>
+</div>
+</li>
+<li class="flex items-start gap-3 text-sm opacity-50">
+<div class="mt-1 w-5 h-5 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 flex-shrink-0 border border-slate-300 dark:border-slate-600">
+<span class="material-icons-round text-xs">hourglass_empty</span>
+</div>
+<div>
+<p class="font-medium text-slate-700 dark:text-slate-200">Generating Case Brief</p>
+<p class="text-xs text-slate-500">Pending final compilation...</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="mt-6 pt-4 border-t border-border-light dark:border-border-dark">
+<div class="flex items-center justify-between text-xs text-slate-500 mb-2">
+<span>Time Elapsed</span>
+<span class="font-mono">2.8s</span>
+</div>
+<div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1.5 overflow-hidden">
+<div class="bg-primary h-1.5 rounded-full" style="width: 92%"></div>
+</div>
+<p class="text-[10px] text-slate-400 mt-2 text-center">System running at peak efficiency</p>
+</div>
+</div>
+</aside>
+</main>
+<footer class="h-8 bg-surface-light dark:bg-surface-dark border-t border-border-light dark:border-border-dark px-4 flex items-center justify-between text-[10px] text-slate-500 font-mono">
+<div class="flex items-center gap-4">
+<span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> SYSTEM: ONLINE</span>
+<span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> DB CONNECTION: STABLE</span>
+<span>ENCRYPTION: AES-256</span>
+</div>
+<div>
+            VERSION 2.4.1-BETA
+        </div>
+</footer>
+
+<script src="/js/config.js"></script>
+<script src="/js/api-client.js"></script>
+<script src="/js/screens/screen3.js"></script>
+</body></html>

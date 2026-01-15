@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Autonomous Action Dispatch Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#EF4444", // Red for emergency/critical actions
+              secondary: "#F59E0B", // Amber for warnings/alerts
+              "background-light": "#F3F4F6", // Gray-100
+              "background-dark": "#111827", // Gray-900
+              "surface-light": "#FFFFFF",
+              "surface-dark": "#1F2937", // Gray-800
+              "surface-highlight-dark": "#374151", // Gray-700
+            },
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              mono: ["JetBrains Mono", "monospace"],
+            },
+            borderRadius: {
+              DEFAULT: "0.5rem",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .map-bg {
+        background-image: radial-gradient(
+            circle at 50% 50%,
+            rgba(239, 68, 68, 0.1) 0%,
+            transparent 50%
+          ),
+          linear-gradient(rgba(243, 244, 246, 0.9), rgba(243, 244, 246, 0.9)),
+          url(https://lh3.googleusercontent.com/aida-public/AB6AXuA5GcbL-xOGt9ITAM8gIHJZOf0SZdcPaelEIXN72b-Fsd0EzM6oZKJkTp4T9gHBgGbDOM0UfX7OxklLSKmh_Tm3n5eis-HFTjCCFEX7wK4CTZ8wXDCLAuu1HnwVV2v-cl4ZcXqyxukOquxItG1LDxPAzgJwihK9631HIdfg7F_jekxi5cCDAl1eFMkdVli_kj_F0_j4T-OYlCPcacjjS-eG9Uci2oomVfEWFh2agkiH2iKIaHGiRVaSCbO95KIo2-IERBQCpddbY2E);
+      }
+      .dark .map-bg {
+        background-image: radial-gradient(
+            circle at 50% 50%,
+            rgba(239, 68, 68, 0.15) 0%,
+            transparent 60%
+          ),
+          linear-gradient(rgba(17, 24, 39, 0.92), rgba(17, 24, 39, 0.92)),
+          url(https://lh3.googleusercontent.com/aida-public/AB6AXuBifoQ7AzBzLs7Xccil_SEEU-UfpozwiMZo5bDzYIX3wPIo9e5hpf9G1mAJiCOOtG6c1EgLL8V4UkfsY20b1iMZimhGTZdICcr2mN_HlfP8YdN1rDLTVQan5Qmipc9rNAQC3CY1Ulry1bL_edW_s-AC6r_sc3EF38s_P6dtaRXvjg9N7DZeP3cqpdTJw6L0dpspbryc3SfqZWfXM88wMny-zfGxmtMacw2RycHJl0XUR8Z3YS31in4SfKzJY3awbjyBvKcdaP0WsPk);
+      }
+      @keyframes radar-pulse {
+        0% {
+          box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+        }
+        70% {
+          box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+        }
+      }
+      .animate-radar {
+        animation: radar-pulse 2s infinite;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-background-light dark:bg-background-dark text-gray-800 dark:text-gray-200 h-screen overflow-hidden flex flex-col font-sans transition-colors duration-200"
+  >
+    <header
+      class="bg-surface-light dark:bg-surface-dark border-b border-gray-200 dark:border-gray-800 h-16 flex items-center justify-between px-6 shadow-sm z-20"
+    >
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2">
+          <span class="material-icons-outlined text-primary text-3xl"
+            >security</span
+          >
+          <h1
+            class="font-bold text-lg tracking-tight text-gray-900 dark:text-white uppercase"
+          >
+            Sentin<span class="text-primary">EL</span>
+            <span
+              class="text-xs bg-primary text-white px-1.5 py-0.5 rounded ml-2 align-middle font-mono"
+              >LIVE AGENT</span
+            >
+          </h1>
+        </div>
+        <div class="h-6 w-px bg-gray-300 dark:bg-gray-700 mx-2"></div>
+        <div
+          class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 font-mono"
+        >
+          <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+          SYSTEM ONLINE
+        </div>
+      </div>
+      <div class="flex items-center gap-6">
+        <div class="flex flex-col items-end">
+          <span
+            class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+            >Current Case ID</span
+          >
+          <span class="font-mono font-bold text-primary">#TRF-2026-9948X</span>
+        </div>
+        <div class="relative">
+          <button
+            class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-surface-highlight-dark transition-colors relative"
+          >
+            <span
+              class="material-icons-outlined text-gray-600 dark:text-gray-300"
+              >notifications</span
+            >
+            <span
+              class="absolute top-1 right-1 w-3 h-3 bg-primary border-2 border-white dark:border-surface-dark rounded-full"
+            ></span>
+          </button>
+        </div>
+        <div
+          class="w-8 h-8 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 dark:from-gray-600 dark:to-gray-800 border border-gray-300 dark:border-gray-600 overflow-hidden flex items-center justify-center"
+        >
+          <span class="material-icons-outlined text-sm text-white">person</span>
+        </div>
+      </div>
+    </header>
+    <main class="flex-1 flex overflow-hidden relative">
+      <aside
+        class="w-96 bg-surface-light dark:bg-surface-dark border-r border-gray-200 dark:border-gray-800 flex flex-col z-10 shadow-lg"
+      >
+        <div
+          class="p-6 border-b border-gray-200 dark:border-gray-800 bg-red-50 dark:bg-red-900/10"
+        >
+          <div class="flex justify-between items-start mb-2">
+            <span
+              class="text-xs font-bold text-primary tracking-wider uppercase"
+              >Threat Level</span
+            >
+            <span
+              class="bg-primary/10 text-primary border border-primary/20 text-xs px-2 py-0.5 rounded font-bold animate-pulse"
+              >CRITICAL ACTION REQUIRED</span
+            >
+          </div>
+          <div class="flex items-center gap-4 mt-2">
+            <div class="relative w-16 h-16 flex items-center justify-center">
+              <svg
+                class="w-full h-full transform -rotate-90"
+                viewBox="0 0 36 36"
+              >
+                <path
+                  class="text-gray-200 dark:text-gray-700"
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                ></path>
+                <path
+                  class="text-primary drop-shadow-[0_0_10px_rgba(239,68,68,0.5)]"
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-dasharray="94, 100"
+                  stroke-width="3"
+                ></path>
+              </svg>
+              <span
+                class="absolute text-2xl font-bold text-gray-900 dark:text-white"
+                >94</span
+              >
+            </div>
+            <div>
+              <h2
+                class="text-lg font-bold text-gray-900 dark:text-white leading-tight"
+              >
+                High Probability Trafficking Network
+              </h2>
+              <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Confirmed link to Syndicate-Alpha
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="flex-1 overflow-y-auto p-4 space-y-4">
+          <div
+            class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2"
+          >
+            Live Analysis Feed
+          </div>
+          <div class="flex gap-3 items-start opacity-50">
+            <div class="flex flex-col items-center">
+              <div class="w-2 h-2 rounded-full bg-gray-400 mt-1.5"></div>
+              <div class="w-px h-full bg-gray-200 dark:bg-gray-700 my-1"></div>
+            </div>
+            <div class="pb-4">
+              <span class="text-xs font-mono text-gray-500">10:42:05</span>
+              <p class="text-sm text-gray-600 dark:text-gray-400">
+                Suspect phone number injected into network graph.
+              </p>
+            </div>
+          </div>
+          <div class="flex gap-3 items-start opacity-70">
+            <div class="flex flex-col items-center">
+              <div class="w-2 h-2 rounded-full bg-secondary mt-1.5"></div>
+              <div class="w-px h-full bg-gray-200 dark:bg-gray-700 my-1"></div>
+            </div>
+            <div class="pb-4">
+              <span class="text-xs font-mono text-gray-500">10:42:06</span>
+              <p class="text-sm text-gray-800 dark:text-gray-300 font-medium">
+                Pattern match detected: "Recruitment Script B".
+              </p>
+            </div>
+          </div>
+          <div class="flex gap-3 items-start">
+            <div class="flex flex-col items-center">
+              <div
+                class="w-3 h-3 rounded-full bg-primary mt-1.5 animate-radar"
+              ></div>
+              <div
+                class="w-px h-full bg-gradient-to-b from-primary to-transparent my-1"
+              ></div>
+            </div>
+            <div class="pb-4 w-full">
+              <span class="text-xs font-mono text-primary font-bold"
+                >10:42:08 - NOW</span
+              >
+              <div
+                class="bg-white dark:bg-surface-highlight-dark border border-gray-200 dark:border-gray-700 rounded-lg p-3 mt-1 shadow-sm"
+              >
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="material-icons-outlined text-primary text-sm"
+                    >bolt</span
+                  >
+                  <h3 class="text-sm font-bold text-gray-900 dark:text-white">
+                    Autonomous Dispatch Initiated
+                  </h3>
+                </div>
+                <p class="text-xs text-gray-600 dark:text-gray-300 mb-2">
+                  Threshold &gt;90 triggered automatic multi-agency alert.
+                </p>
+                <div class="flex flex-wrap gap-2">
+                  <span
+                    class="text-[10px] bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-1.5 py-0.5 rounded border border-blue-200 dark:border-blue-800"
+                    >Local PD</span
+                  >
+                  <span
+                    class="text-[10px] bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-1.5 py-0.5 rounded border border-blue-200 dark:border-blue-800"
+                    >FBI Field Office</span
+                  >
+                  <span
+                    class="text-[10px] bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-1.5 py-0.5 rounded border border-blue-200 dark:border-blue-800"
+                    >Victim Services</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="p-4 border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-surface-dark grid grid-cols-2 gap-4"
+        >
+          <div>
+            <span class="block text-xs text-gray-500 uppercase"
+              >Historical Cases</span
+            >
+            <span
+              class="font-mono text-lg font-bold text-gray-900 dark:text-white"
+              >340</span
+            >
+          </div>
+          <div>
+            <span class="block text-xs text-gray-500 uppercase"
+              >Est. Victims</span
+            >
+            <span class="font-mono text-lg font-bold text-secondary">3</span>
+          </div>
+        </div>
+      </aside>
+      <section class="flex-1 relative map-bg bg-cover">
+        <div
+          class="absolute inset-0 bg-gradient-to-t from-background-light dark:from-background-dark to-transparent opacity-20 pointer-events-none"
+        ></div>
+        <div class="absolute top-4 right-4 flex flex-col gap-2">
+          <button
+            class="bg-surface-light dark:bg-surface-dark p-2 rounded shadow-md border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300"
+          >
+            <span class="material-icons-outlined">add</span>
+          </button>
+          <button
+            class="bg-surface-light dark:bg-surface-dark p-2 rounded shadow-md border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300"
+          >
+            <span class="material-icons-outlined">remove</span>
+          </button>
+          <button
+            class="bg-surface-light dark:bg-surface-dark p-2 rounded shadow-md border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 mt-2"
+          >
+            <span class="material-icons-outlined">layers</span>
+          </button>
+        </div>
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="relative flex items-center justify-center">
+            <div
+              class="absolute w-[400px] h-[400px] border border-primary/20 rounded-full animate-[ping_3s_linear_infinite]"
+            ></div>
+            <div
+              class="absolute w-[300px] h-[300px] border border-primary/40 rounded-full animate-[ping_2s_linear_infinite]"
+            ></div>
+            <div
+              class="absolute w-[300px] h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent rotate-0 animate-pulse"
+            ></div>
+            <div
+              class="absolute w-[300px] h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent rotate-120 animate-pulse"
+            ></div>
+            <div
+              class="absolute w-[300px] h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent rotate-240 animate-pulse"
+            ></div>
+            <div
+              class="w-16 h-16 bg-primary/20 backdrop-blur-sm rounded-full flex items-center justify-center border-2 border-primary shadow-[0_0_30px_rgba(239,68,68,0.6)] z-10 relative"
+            >
+              <span
+                class="material-icons-outlined text-primary text-3xl animate-pulse"
+                >warning</span
+              >
+              <div
+                class="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-surface-dark text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg flex items-center gap-1 border border-gray-600 whitespace-nowrap animate-bounce"
+              >
+                <span class="material-icons-outlined text-xs text-green-400"
+                  >check_circle</span
+                >
+                SMS ALERT SENT
+              </div>
+            </div>
+            <div
+              class="absolute transform translate-x-[140px] -translate-y-[60px] flex flex-col items-center"
+            >
+              <div
+                class="bg-surface-light dark:bg-surface-dark p-2 rounded-lg shadow-lg border-l-4 border-blue-500 mb-2 w-32"
+              >
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="material-icons-outlined text-blue-500 text-sm"
+                    >local_police</span
+                  >
+                  <span
+                    class="text-[10px] font-bold uppercase text-gray-500 dark:text-gray-400"
+                    >Local PD</span
+                  >
+                </div>
+                <div class="text-xs font-bold text-gray-900 dark:text-white">
+                  Dispatch Sent
+                </div>
+              </div>
+            </div>
+            <div
+              class="absolute transform -translate-x-[140px] -translate-y-[60px] flex flex-col items-center"
+            >
+              <div
+                class="bg-surface-light dark:bg-surface-dark p-2 rounded-lg shadow-lg border-l-4 border-indigo-500 mb-2 w-32"
+              >
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="material-icons-outlined text-indigo-500 text-sm"
+                    >gavel</span
+                  >
+                  <span
+                    class="text-[10px] font-bold uppercase text-gray-500 dark:text-gray-400"
+                    >Federal</span
+                  >
+                </div>
+                <div class="text-xs font-bold text-gray-900 dark:text-white">
+                  Case File #882
+                </div>
+              </div>
+            </div>
+            <div
+              class="absolute transform translate-y-[120px] flex flex-col items-center"
+            >
+              <div
+                class="bg-surface-light dark:bg-surface-dark p-2 rounded-lg shadow-lg border-l-4 border-teal-500 mb-2 w-32"
+              >
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="material-icons-outlined text-teal-500 text-sm"
+                    >health_and_safety</span
+                  >
+                  <span
+                    class="text-[10px] font-bold uppercase text-gray-500 dark:text-gray-400"
+                    >Victim Svc</span
+                  >
+                </div>
+                <div class="text-xs font-bold text-gray-900 dark:text-white">
+                  Team Alerted
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-full max-w-2xl px-4"
+        >
+          <div
+            class="bg-surface-light dark:bg-surface-dark/90 backdrop-blur-md border border-primary/50 rounded-xl shadow-2xl p-4 flex items-center justify-between"
+          >
+            <div class="flex items-center gap-4">
+              <div class="bg-primary/20 p-2 rounded-full">
+                <span class="material-icons-outlined text-primary animate-pulse"
+                  >podcasts</span
+                >
+              </div>
+              <div>
+                <h4 class="text-sm font-bold text-gray-900 dark:text-white">
+                  Response Activated
+                </h4>
+                <p class="text-xs text-gray-500 dark:text-gray-400">
+                  Automated alerts dispatched to 3 agencies in 0.4s
+                </p>
+              </div>
+            </div>
+            <div class="h-8 w-px bg-gray-300 dark:bg-gray-700 mx-2"></div>
+            <div class="flex gap-3">
+              <button
+                class="flex items-center gap-2 px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white text-xs font-bold rounded transition-colors uppercase tracking-wide"
+              >
+                <span class="material-icons-outlined text-sm">pause</span>
+                Halt Auto
+              </button>
+              <button
+                class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-red-600 text-white text-xs font-bold rounded shadow-lg shadow-red-500/30 transition-all uppercase tracking-wide"
+              >
+                <span class="material-icons-outlined text-sm">description</span>
+                View Case Brief
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <aside
+        class="w-80 bg-surface-light dark:bg-surface-dark border-l border-gray-200 dark:border-gray-800 flex flex-col z-10 hidden xl:flex"
+      >
+        <div
+          class="p-4 border-b border-gray-200 dark:border-gray-800 flex justify-between items-center"
+        >
+          <h3 class="font-bold text-gray-900 dark:text-white">AI Reasoning</h3>
+          <span
+            class="text-xs font-mono text-gray-500 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >v4.2 Model</span
+          >
+        </div>
+        <div class="flex-1 p-4 overflow-y-auto">
+          <div
+            class="bg-blue-50 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-800 rounded-lg p-3 mb-4"
+          >
+            <div class="flex items-center gap-2 mb-2">
+              <span
+                class="material-icons-outlined text-blue-600 dark:text-blue-400 text-sm"
+                >psychology</span
+              >
+              <span
+                class="text-xs font-bold text-blue-700 dark:text-blue-300 uppercase"
+                >Logic Chain</span
+              >
+            </div>
+            <p
+              class="text-sm text-gray-800 dark:text-gray-300 leading-relaxed italic"
+            >
+              "The injected phone number matches 3 dormant cases. Pattern
+              analysis of SMS logs indicates coercive language consistent with
+              known trafficking scripts. Risk score exceeds automated dispatch
+              threshold."
+            </p>
+          </div>
+          <div class="space-y-4">
+            <div class="border-b border-gray-200 dark:border-gray-800 pb-3">
+              <div class="text-xs text-gray-500 uppercase mb-1">
+                Primary Indicator
+              </div>
+              <div class="flex justify-between items-center">
+                <span
+                  class="text-sm font-medium text-gray-900 dark:text-gray-200"
+                  >Phone Number Match</span
+                >
+                <span class="text-xs font-bold text-primary">100%</span>
+              </div>
+              <div
+                class="w-full bg-gray-200 dark:bg-gray-700 h-1.5 rounded-full mt-1"
+              >
+                <div
+                  class="bg-primary h-1.5 rounded-full"
+                  style="width: 100%"
+                ></div>
+              </div>
+            </div>
+            <div class="border-b border-gray-200 dark:border-gray-800 pb-3">
+              <div class="text-xs text-gray-500 uppercase mb-1">
+                Secondary Indicator
+              </div>
+              <div class="flex justify-between items-center">
+                <span
+                  class="text-sm font-medium text-gray-900 dark:text-gray-200"
+                  >Geo-Location Pattern</span
+                >
+                <span class="text-xs font-bold text-secondary">87%</span>
+              </div>
+              <div
+                class="w-full bg-gray-200 dark:bg-gray-700 h-1.5 rounded-full mt-1"
+              >
+                <div
+                  class="bg-secondary h-1.5 rounded-full"
+                  style="width: 87%"
+                ></div>
+              </div>
+            </div>
+            <div class="border-b border-gray-200 dark:border-gray-800 pb-3">
+              <div class="text-xs text-gray-500 uppercase mb-1">
+                Network Density
+              </div>
+              <div class="flex justify-between items-center">
+                <span
+                  class="text-sm font-medium text-gray-900 dark:text-gray-200"
+                  >Connections Found</span
+                >
+                <span class="text-xs font-bold text-gray-500 dark:text-gray-400"
+                  >High</span
+                >
+              </div>
+              <div class="mt-2 flex gap-1">
+                <div
+                  class="h-8 w-1 bg-red-300 dark:bg-red-900 rounded-sm"
+                ></div>
+                <div
+                  class="h-8 w-1 bg-red-400 dark:bg-red-800 rounded-sm"
+                ></div>
+                <div
+                  class="h-8 w-1 bg-red-500 dark:bg-red-700 rounded-sm"
+                ></div>
+                <div class="h-8 w-1 bg-primary rounded-sm animate-pulse"></div>
+                <div
+                  class="h-8 w-1 bg-red-600 dark:bg-red-500 rounded-sm"
+                ></div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="mt-6 p-3 bg-gray-50 dark:bg-surface-highlight-dark rounded border border-dashed border-gray-300 dark:border-gray-600"
+          >
+            <div class="flex items-center gap-2 mb-2">
+              <span class="material-icons-outlined text-gray-500 text-sm"
+                >history</span
+              >
+              <span class="text-xs font-bold text-gray-500 uppercase"
+                >Similar Cases</span
+              >
+            </div>
+            <ul class="space-y-2">
+              <li class="flex justify-between text-xs">
+                <span
+                  class="text-blue-600 dark:text-blue-400 underline cursor-pointer"
+                  >Case #8821</span
+                >
+                <span class="text-gray-500">Resolved 2022</span>
+              </li>
+              <li class="flex justify-between text-xs">
+                <span
+                  class="text-blue-600 dark:text-blue-400 underline cursor-pointer"
+                  >Case #1104</span
+                >
+                <span class="text-gray-500">Active</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <script src="/js/config.js"></script>
+    <script src="/js/api-client.js"></script>
+    <script src="/js/screens/screen4.js"></script>
+  </body>
+</html>

@@ -15,7 +15,7 @@ class Config:
     # Bedrock Configuration
     BEDROCK_MODEL_ID: str = os.environ.get(
         'BEDROCK_MODEL_ID', 
-        'anthropic.claude-sonnet-4-20250514-v1:0'
+        'anthropic.claude-sonnet-4-20260514-v1:0'
     )
     BEDROCK_REGION: str = os.environ.get('BEDROCK_REGION', 'us-west-2')
     BEDROCK_TEMPERATURE: float = float(os.environ.get('BEDROCK_TEMPERATURE', '0.2'))

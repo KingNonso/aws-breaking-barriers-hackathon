@@ -102,17 +102,19 @@ This document specifies the requirements for connecting the existing five-screen
 4. WHEN a WebSocket connection is lost, THE UI_Application SHALL attempt to reconnect automatically
 5. THE Backend_System SHALL send heartbeat messages every 30 seconds to keep connections alive
 
-### Requirement 8: Static Website Hosting
+### Requirement 8: Web Server and Hosting
 
-**User Story:** As a system architect, I want the UI hosted on AWS infrastructure, so that it is accessible, scalable, and integrated with the backend services.
+**User Story:** As a developer, I want a local development server and production hosting, so that I can test the UI locally at localhost:3000 and deploy it to a publicly accessible URL.
 
 #### Acceptance Criteria
 
-1. THE UI_Application SHALL be hosted on Amazon S3 as a static website
-2. THE UI_Application SHALL be served through Amazon CloudFront for global distribution and HTTPS support
-3. WHEN a user accesses the application, THE UI_Application SHALL load within 2 seconds
-4. THE UI_Application SHALL use environment-specific configuration for API endpoints (dev, staging, prod)
-5. THE UI_Application SHALL implement client-side routing to support direct navigation to any screen via URL
+1. WHEN running locally, THE UI_Application SHALL be accessible at http://localhost:3000
+2. WHEN the development server starts, THE UI_Application SHALL serve all HTML files and static assets
+3. THE UI_Application SHALL be hosted on Amazon S3 as a static website for production
+4. THE UI_Application SHALL be served through Amazon CloudFront for global distribution and HTTPS support
+5. WHEN a user accesses the application, THE UI_Application SHALL load within 2 seconds
+6. THE UI_Application SHALL use environment-specific configuration for API endpoints (dev, staging, prod)
+7. THE UI_Application SHALL implement client-side routing to support direct navigation to any screen via URL
 
 ### Requirement 9: Session Management and State Persistence
 

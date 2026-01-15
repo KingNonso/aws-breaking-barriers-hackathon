@@ -27,7 +27,7 @@ class CDKConfig:
     LAMBDA_RUNTIME: str = "python3.12"
     
     # Bedrock Configuration
-    BEDROCK_MODEL_ID: str = "anthropic.claude-sonnet-4-20250514-v1:0"
+    BEDROCK_MODEL_ID: str = "anthropic.claude-sonnet-4-20260514-v1:0"
     BEDROCK_REGION: str = "us-west-2"
     BEDROCK_TEMPERATURE: str = "0.2"
     BEDROCK_MAX_TOKENS: str = "4096"
