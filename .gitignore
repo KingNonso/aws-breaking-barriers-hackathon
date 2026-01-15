@@ -1,11 +1,21 @@
-# OS / Editors
+# ============================================
+# Operating Systems & Editors
+# ============================================
 .DS_Store
 Thumbs.db
 *.swp
 *.swo
 *.orig
+*~
+.idea/
+.vscode/
+.vscode-test/
+*.sublime-project
+*.sublime-workspace
 
+# ============================================
 # Python
+# ============================================
 __pycache__/
 *.py[cod]
 *$py.class
@@ -15,9 +25,9 @@ __pycache__/
 .venv/
 venv/
 env/
-.env
-.env.*
-.venv.*
+ENV/
+env.bak/
+venv.bak/
 *.egg-info/
 .eggs/
 build/
@@ -29,8 +39,19 @@ pip-wheel-metadata/
 .pytype/
 .cache/
 .ipynb_checkpoints/
+.tox/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.cover
+.hypothesis/
+.dmypy.json
+dmypy.json
 
-# JavaScript / TypeScript
+# ============================================
+# JavaScript / Node.js / TypeScript
+# ============================================
 node_modules/
 .npm/
 .pnpm-store/
@@ -48,54 +69,145 @@ coverage/
 .vite/
 .parcel-cache/
 .storybook-out/
+.eslintcache
+.stylelintcache
 
-# Package managers
-package-lock.json
-pnpm-lock.yaml
-yarn.lock
+# Package manager lock files (optional - uncomment if you want to ignore)
+# package-lock.json
+# pnpm-lock.yaml
+# yarn.lock
 
+# ============================================
 # Logs
+# ============================================
 *.log
 logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# Environment & secrets
-*.env
+# ============================================
+# Environment Variables & Secrets
+# ============================================
+.env
+.env.*
+!.env.example
 .env.local
 .env.production
 .env.development
 .env.test
 *.pem
 *.key
+*.crt
+*.p12
+*.pfx
+secrets.json
+credentials.json
 
-# Infrastructure / IaC / Serverless artifacts
+# ============================================
+# AWS & Cloud Infrastructure
+# ============================================
+# CDK
+cdk.out/
+cdk.context.json
+.cdk.staging/
+
+# SAM
+.aws-sam/
+samconfig.toml
+
+# Serverless Framework
+.serverless/
+.sls-next*
+
+# Terraform
 .terraform/
 .terraform.lock.hcl
 *.tfstate
 *.tfstate.backup
 *.tfvars
 *.tfvars.json
-cdk.out/
-.aws-sam/
-.serverless/
-.sls-next*
-.chalice/
+
+# Chalice
+.chalice/deployments/
+.chalice/deployed/
+
+# SST
 .sst/
 .overmind.sock
 
-# Containers
+# Lambda layers
+lambda/layers/
+lambda/*/package/
+lambda/*/python/
+
+# ============================================
+# Testing & Coverage
+# ============================================
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.cover
+.junit/
+.nyc_output/
+test-results/
+junit.xml
+
+# ============================================
+# Build Artifacts & Temporary Files
+# ============================================
 *.tar
 *.gz
 *.zip
 *.tmp
-.dockerignore
+*.temp
+*.bak
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
 
-# Coverage / test output
-htmlcov/
-coverage.xml
-.junit/
-.nyc_output/
+# ============================================
+# Documentation
+# ============================================
+docs/_build/
+site/
+.docusaurus/
 
-# Misc
-.idea/
-.vscode/
-.vscode-test/
+# ============================================
+# Database
+# ============================================
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+
+# ============================================
+# Project Specific
+# ============================================
+# UI build output
+ui/dist/
+ui/build/
+
+# Lambda deployment packages
+lambda/*.zip
+lambda/*/deployment-package.zip
+
+# CDK bootstrap
+cdk-bootstrap-*
+
+# Local testing
+.local/
+tmp/
+temp/
+
+# Generated documentation
+generated-docs/*.pdf
+
+# Backup files
+*.backup
+*-backup.*
